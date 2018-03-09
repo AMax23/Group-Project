@@ -5,7 +5,9 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -26,6 +28,7 @@ public class Assign1 {
 	
 	
 	static int decCount = 0;
+	static int refCount = 0;
 	
 	//Ask the user for the pathname (command line)
 	public static String getPathname() {							
@@ -67,7 +70,7 @@ public class Assign1 {
 		return sb.toString();											// Return the built string of code
 	}
 	
-	// Parse and traverse the syntax tree from the string of code
+	// Parse the syntax tree from the string of code
 	public static ASTNode makeSyntaxTree(char[] sourceCode) {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS9);						
@@ -79,21 +82,40 @@ public class Assign1 {
 		return cu;
 	}
 	
-	public static int countDeclarations(ASTNode cu, String targetType) {
+	// Count class, enumeration, annotation, and interface type declarations
+	// and increment the decCount global variable
+	public static void countDeclarations(ASTNode cu, String targetType) {
 		cu.accept(new ASTVisitor() {
 			
-			public boolean visit(TypeDeclaration node) {								// Visit any Type Declaration nodes in the directory:
-				System.out.println("THIS IS ONE NODE \n" +node.toString()); //DEBUGGING	// (this kind of node includes Class Declarations
-				decCount++;																// and Interface Declarations.)
-//				ITypeBinding binding = node.resolveBinding();
-//				System.out.println("Binding: "+binding);
+			public boolean visit(TypeDeclaration node) {						// Visit any Type Declaration nodes in the directory: (this kind of node
+				String nodeAsString = node.toString();							// includes Class Declarations and Interface Declarations.)
+				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 		//DEBUGGING	
+				if (nodeAsString.contains("class "+ targetType) | nodeAsString.contains("interface "+ targetType) ) { // if this class or interface declaration includes the target type
+					decCount++;													// Add to count
+				}
+				return true;
+			}
+			
+			public boolean visit(EnumDeclaration node) {						// Visit any Enumeration Declaration nodes in the directory
+				String nodeAsString = node.toString();							
+				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 		// DEBUGGING	
+				if (nodeAsString.contains("enum "+ targetType)) { 				// if this enumeration declaration includes the target type
+					decCount++;													// Add to count
+				}
+				return true;
+			}
+			
+			public boolean visit(AnnotationTypeDeclaration node) {				// Visit any Annotation Declaration nodes in the directory
+				String nodeAsString = node.toString();							
+				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 		// DEBUGGING	
+				if (nodeAsString.contains("interface "+ targetType)) { 			// if this annotation declaration includes the target type
+					decCount++;													// Add to count
+				}
 				return true;
 			}
 		});
-		System.out.println(decCount+ " Type declarations");
-		return decCount;
 	}
-	
+
 	public static void main (String [] args) throws FileNotFoundException, IOException {
 		
 //		String pathname = getPathname();										// Ask user for directory path
@@ -104,6 +126,7 @@ public class Assign1 {
 		System.out.println("THIS IS THE ENTIRE SOURCE STRING"+sourceString);  	// FOR DEBUGGING
 		ASTNode cu = makeSyntaxTree(sourceString.toCharArray()); 				// Build syntax tree from the string file content
 		countDeclarations(cu, targetType);										// Traverse, count declarations of given type
+		System.out.println(decCount); 											// DEBUG print the declaration count for a given type 
 	}
 }
 		
