@@ -128,7 +128,7 @@ public class Assign1 {
 		countDeclarations(cu, targetType);										// Traverse, count declarations of given type
 		System.out.println(decCount); 											// DEBUG print the declaration count for a given type 
 	}
-}
+}  
 		
 				/** Our previous shenanigans **/		
 		
