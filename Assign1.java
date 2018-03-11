@@ -1,24 +1,20 @@
+// Version: March 10
+
 package team1;
 
-
-import java.util.HashSet;
-import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.WhileStatement;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -31,6 +27,7 @@ public class Assign1 {
 
 
 	static int decCount = 0;
+	static int refCount = 0;
 
 	//Ask the user for the pathname (command line)
 	public static String getPathname() {
@@ -73,93 +70,123 @@ public class Assign1 {
 	}
 
 	// Parse and traverse the syntax tree from the string of code
-	public static ASTNode makeSyntaxTree(char[] sourceCode) {
+	public static ASTNode makeSyntaxTree(char[] sourceCode,String[] classpath, String[] sources, String unitName ) {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS9);
 		parser.setSource (sourceCode);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
-
-		// Should change
-		parser.setUnitName("Foo.java");
-		String [] classpath = {"/Users/ahmed/eclipse-workspace/team1/src"};
-		String [] sources = {"/Users/ahmed/Downloads/jar"};
-
+		parser.setUnitName(unitName);																// Name of the file
 		parser.setEnvironment(classpath, sources, new String[] { "UTF-8"}, true);
+
 		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 		return cu;
 	}
 
-	public static int countDeclarations(ASTNode cu, String targetType) {
+	public static int count(ASTNode cu, String targetType) {
 		cu.accept(new ASTVisitor() {
 
-			public boolean visit(VariableDeclarationFragment node) {								// Visit any Type Declaration nodes in the directory:
-				//System.out.println("THIS IS ONE NODE \n" +node.toString()); //DEBUGGING	// (this kind of node includes Class Declarations
+			public boolean visit(VariableDeclarationFragment node) {									// Visit any Type Declaration nodes in the directory:
+//				System.out.println("THIS IS ONE NODE \n" +node.toString()); //DEBUGGING				// (this kind of node includes Class Declarations
 				SimpleName name = node.getName();
-				//String name = node.getName().getIdentifier();
-				System.out.println("\nVariable = "+name);
-				//System.out.println("Type Declaration = "+name.getIdentifier());
 				IVariableBinding binding = node.resolveBinding();
-				System.out.println("variable info = "+ binding.getVariableDeclaration());
-				//System.out.println("this is a node name : "+ name.getFullyQualifiedName().getClass().getName());
-				decCount++;																// and Interface Declarations.)
-//				ITypeBinding binding = node.resolveBinding();
-//				System.out.println("Binding: "+binding);
+				String nodeType = binding.getVariableDeclaration().getType().getQualifiedName();
+				//String classType = binding.getDeclaringClass().getName();							// Trying to get class name
+				//System.out.println("<< Class type = "+classType+" >>");								// Print class type. Might give null pointer error
+				System.out.printf("<< Variable = %s\t\tType = %s >>\n",name,nodeType);
+				if ( nodeType.equals(targetType)) {
+					decCount++;
+					refCount++;
+				}
+
 				return true;
 			}
-			/*
-			public boolean visit(AnnotationTypeDeclaration node) {								// Visit any Type Declaration nodes in the directory:
-				//System.out.println("THIS IS ONE NODE \n" +node.toString()); //DEBUGGING	// (this kind of node includes Class Declarations
+
+			// Doesnt work??
+			public boolean visit(AnonymousClassDeclaration node) {									// Visit any Enumeration Declaration nodes in the directory
+//				String nodeAsString = node.toString();
+				System.out.println("Class declaration = " +node.getClass()); 							// DEBUGGING
+
+				return true;
+			}
+
+			public boolean visit(EnumDeclaration node) {												// Visit any Enumeration Declaration nodes in the directory
+				String nodeAsString = node.toString();
+				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 								// DEBUGGING
+				if (nodeAsString.contains("enum "+ targetType)) { 									// if this enumeration declaration includes the target type
+					decCount++;																		// Add to count
+				}
+				return true;
+			}
+
+			public boolean visit(AnnotationTypeDeclaration node) {									// Visit any Annotation Declaration nodes in the directory
+				String nodeAsString = node.toString();
+				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 								// DEBUGGING
+				if (nodeAsString.contains("interface "+ targetType)) { 								// if this annotation declaration includes the target type
+					decCount++;																		// Add to count
+				}
+				return true;
+			}
+
+			public boolean visit(MethodDeclaration node) {
 				SimpleName name = node.getName();
-				System.out.println("Annotation Type = "+name.getIdentifier().getClass().getName());
-				//System.out.println("this is a node name : "+ name.getFullyQualifiedName().getClass().getName());
-				//decCount++;																// and Interface Declarations.)
-//				ITypeBinding binding = node.resolveBinding();
-//				System.out.println("Binding: "+binding);
-				return true;
-			}
-			*/
+				IMethodBinding binding = node.resolveBinding();
+				String nodeType = binding.getMethodDeclaration().getReturnType().getQualifiedName();
 
-			public boolean visit(EnumDeclaration node) {						// Visit any Enumeration Declaration nodes in the directory
-				String nodeAsString = node.toString();
-				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 		// DEBUGGING
-				if (nodeAsString.contains("enum "+ targetType)) { 				// if this enumeration declaration includes the target type
-					decCount++;													// Add to count
+				System.out.printf("<< Method = %s\t\tType = %s >>\n",name,nodeType);
+				// For testing only. Increment both
+				if ( nodeType.equals(targetType)) {
+					decCount++;
+					refCount++;
 				}
 				return true;
 			}
 
-			public boolean visit(AnnotationTypeDeclaration node) {				// Visit any Annotation Declaration nodes in the directory
-				String nodeAsString = node.toString();
-				System.out.println("THIS IS ONE NODE \n" +nodeAsString); 		// DEBUGGING
-				if (nodeAsString.contains("interface "+ targetType)) { 			// if this annotation declaration includes the target type
-					decCount++;													// Add to count
-				}
-				return true;
-			}
 		});
-		System.out.println(decCount+ " Type declarations");
 		return decCount;
 	}
 
+	/*
+	 * Main method:
+	 * For now enter directory of interest in pathname,
+	 * Choose a targetType
+	 * Change sources folder
+	 * Combines the source files, converts them to a string and parses, creates an AST
+	 * The call to countDeclaration, returns ref count and dec count ***THEY WILL BE THE SAME
+	 */
 	public static void main (String [] args) throws FileNotFoundException, IOException {
 
-//		String pathname = getPathname();										// Ask user for directory path
-	//	String pathname = "C:\\Users\\teale\\Documents\\School\\SENG 300\\SENGTutorial1\\src";	// DEBUGGING: Just put the pathname here
-//		String targetType = getType();											// Ask user for type they're looking for
+//		String pathname = getPathname();																// Ask user for directory path
+//		String pathname = "C:\\Users\\teale\\Documents\\School\\SENG 300\\SENGTutorial1\\src";			// DEBUGGING: Just put the pathname here
+//		String targetType = getType();																// Ask user for type they're looking for
 
-		String pathname = "/Users/ahmed/eclipse-workspace/team1/src";
-		String targetType = ("Cuboid");											// DEBUGGING: Just put target type here
-		String sourceString = filesToString(pathname);							// Make a string of the files' code
-		//System.out.println("THIS IS THE ENTIRE SOURCE STRING"+sourceString);  	// FOR DEBUGGING
-		ASTNode cu = makeSyntaxTree(sourceString.toCharArray()); 				// Build syntax tree from the string file content
-		countDeclarations(cu, targetType);										// Traverse, count declarations of given type
+		String pathname = "/Users/ahmed/Downloads/test";												// Manual for now
+		String targetType = "java.lang.String";														// DEBUGGING: Just put target type here
+		String [] sources = {"/Users/ahmed/Downloads/jar"};											// Jar files
+		System.out.println("<< Target Type = "+ targetType+ " >>\n");
+
+		String sourceString = filesToString(pathname);												// Make a string of the files' code
+		//System.out.println("THIS IS THE ENTIRE SOURCE STRING"+sourceString);  						// FOR DEBUGGING
+		String [] classpath = {pathname};															// Where the files are located
+		String unitName = sourceString;
+
+
+		ASTNode cu = makeSyntaxTree(sourceString.toCharArray(),classpath, sources, unitName); 			// Build syntax tree from the string file content
+
+		count(cu, targetType);																		// Traverse, count declarations of given type
+
+		System.out.printf("\nType: %s\t\tDeclarations found: %d\tReferences found: %d\n",targetType,decCount,refCount);
+		//	System.out.println("count = "+ decCount);
 	}
 }
 
-				/** Our previous shenanigans **/
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Our previous shenanigans **/
 
 //	}
 /*
@@ -226,4 +253,4 @@ public class Assign1 {
 		System.out.println("Declaration of '"+name+"' at line");
 
 		return true;
-*/
+ */
