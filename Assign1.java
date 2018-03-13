@@ -37,9 +37,11 @@ public class Assign1 {
 		/** ENTER TARGET DIRECTORY, TARGET TYPE, AND SOURCE DIRECTORY MANUALLY
 		 	Uncomment the following and enter the specified strings: **/
 //		String pathname = "C:\Users\teale\Documents\School\SENG 300\TestCode";  // TEALE				
-//		String pathname = "/Users/ahmed/Downloads/test";						// AHMED			
+//		String pathname = "/Users/ahmed/Downloads/test";						// AHMED
+		String pathname = "D:\Javafiles\BASEDIR";				//MAX
 //		String [] sources = {"C:\\Users\\teale\\Documents\\eclipse-java-oxygen-2-win32-x86_64\\eclipse\\plugins"};	// TEALE
-//		String [] sources = {"/Users/ahmed/Downloads/jar"};															// AHMED
+//		String [] sources = {"/Users/ahmed/Downloads/jar"};								// AHMED
+		String [] sources = {"D:\ADDITIONAL TOOLS\eclipse\plugins"};							// MAX
 		
 //		String pathname = "<ENTER TARGET DIRECTORY HERE>"; 		
 //		String targetType = "<ENTER TYPE HERE>";		
