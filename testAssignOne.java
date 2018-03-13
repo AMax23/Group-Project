@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Map;
 
@@ -40,41 +41,49 @@ public class testAssignOne {
 	/**
 	 * test for method getPathname
 	 */
-	 @TestD
-	 pubic void testGetPathname(){
+	 @Test
+	 public void testGetPathname(){
 		 //set
-		 Assign1 testCase = new Assign1()
-		 testCase.
-		 
+		 Assign1 testCase = new Assign1();
+		 testCase.getPathname();
+		 //test
 	 }
 	 
 	 /**
 	 * test for method filesToSTring
 	 */
-	 @TestD
-	 pubic void testFilesToString(){
+	 @Test
+	 public void testFilesToString(){
 		 //set
-		 Assign1 testCase = new Assign1()
+		 Assign1 testCase = new Assign1();
+		 testCase.filesToString("test");
+		 //test
 		 
 	 }
 	 
 	 /**
 	 * test for method makeSyntaxTree
 	 */
-	 @TestD
-	 pubic void testMakeSyntaxTree(){
+	 @Test
+	 public void testMakeSyntaxTree(){
 		 //set
-		 Assign1 testCase = new Assign1()
+		 Assign1 testCase = new Assign1();
+		 testCase.makeSyntaxTree( );
+		 //test
 	 }
 	 
 	 /**
 	 * test for method count
 	 */
-	 @TestD
-	 pubic void testCount(){
+	 @Test
+	 public void testCount(){
 		//set
-		Assign1 testCase = new Assign1()
-		 
+		Assign1 testCase = new Assign1();
+		ASTParser parser = ASTParser.newParser(AST.JLS8);
+		ASTNode aTest = parser.createAST(null);
+		testCase.count(aTest ,"test");
+		//test
+		
 	 }
 	
 }
