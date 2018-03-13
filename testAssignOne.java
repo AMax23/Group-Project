@@ -43,11 +43,34 @@ public class testAssignOne {
 	 */
 	 @Test
 	 public void testGetPathname(){
-		 //set
-		 Assign1 testCase = new Assign1();
-		 testCase.getPathname();
+		 new Assign1();
+		 Assign1.getPathname();
 		 //test
 	 }
+	 
+	 /**
+	  * test for method getTargetType
+	  */
+	 @Test
+	 public void testGetTargetType() {
+		 //set
+		 new Assign1();
+		 Assign1.getTargetType();
+		 //test
+		 
+	 }
+	 
+	 /**
+	  * test for method getJarFiles
+	  */
+	 @Test
+	 public void testGetJarFiles() {
+		 //set
+		 new Assign1();
+		 Assign1.getJarFiles();
+		 //test
+	 }
+	 
 	 
 	 /**
 	 * test for method filesToSTring
@@ -55,8 +78,8 @@ public class testAssignOne {
 	 @Test
 	 public void testFilesToString(){
 		 //set
-		 Assign1 testCase = new Assign1();
-		 testCase.filesToString("test");
+		 new Assign1();
+		 //Assign1.filesToString("test");
 		 //test
 		 
 	 }
@@ -67,8 +90,8 @@ public class testAssignOne {
 	 @Test
 	 public void testMakeSyntaxTree(){
 		 //set
-		 Assign1 testCase = new Assign1();
-		 testCase.makeSyntaxTree( );
+		 new Assign1();
+		 //testCase.makeSyntaxTree( );
 		 //test
 	 }
 	 
@@ -77,12 +100,13 @@ public class testAssignOne {
 	 */
 	 @Test
 	 public void testCount(){
-		//set
-		Assign1 testCase = new Assign1();
+		new Assign1();
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		ASTNode aTest = parser.createAST(null);
-		testCase.count(aTest ,"test");
+		Assign1.count(aTest ,"test");
 		//test
+		
+		
 		
 	 }
 	
