@@ -46,6 +46,8 @@ public class testAssignOne {
 		 new Assign1();
 		 Assign1.getPathname();
 		 //test
+		 
+		 
 	 }
 	 
 	 /**
@@ -79,8 +81,15 @@ public class testAssignOne {
 	 public void testFilesToString(){
 		 //set
 		 new Assign1();
-		 //Assign1.filesToString("test");
-		 //test
+		 try {
+			Assign1.filesToString("test");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		 
 	 }
 	 
