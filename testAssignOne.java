@@ -100,7 +100,7 @@ public class testAssignOne {
 	 public void testMakeSyntaxTree(){
 		 //set
 		 new Assign1();
-		 //testCase.makeSyntaxTree( );
+		 Assign1.makeSyntaxTree(null, null, null, null);
 		 //test
 	 }
 	 
@@ -113,9 +113,7 @@ public class testAssignOne {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		ASTNode aTest = parser.createAST(null);
 		Assign1.count(aTest ,"test");
-		//test
-		
-		
+		//test		
 		
 	 }
 	
