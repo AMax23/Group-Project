@@ -25,10 +25,11 @@ public class Assign1 {
 								
 		
 		/** USER INPUT **/
+		Scanner keyboard = new Scanner(System.in); 
 		UserContact uc = new UserContact();
-		String pathname = uc.getPathname();														// Ask user for directory path
-		String [] sources = uc.getJarFiles();													// Ask user for the directory containing their jar files 		
-		String targetType = uc.getTargetType();													// Ask user for type they're looking for
+		String pathname = uc.getPathname(keyboard);			 											// Ask user for directory path
+		String [] sources = uc.getJarFiles(keyboard);													// Ask user for the directory containing their jar files 		
+		String targetType = uc.getTargetType(keyboard);													// Ask user for type they're looking for
 
 		TreeBuilder builder = new TreeBuilder();
 		String sourceString = builder.filesToString(pathname);									// Put contents of directory into one string
