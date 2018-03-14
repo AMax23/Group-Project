@@ -1,9 +1,10 @@
+package project1;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -16,7 +17,7 @@ public class TreeBuilder {
  **  Convert the contents of all java files in the directory to one string.
  **	 Return: The string of code from the directory.
  **/
-	public static String filesToString(String pathname) throws IOException, FileNotFoundException {
+	public String filesToString(String pathname) throws IOException, FileNotFoundException {
 		StringBuilder sb = new StringBuilder();	
 		File directory = new File(pathname);
 		File[] allFiles = directory.listFiles();
@@ -49,7 +50,7 @@ public class TreeBuilder {
  **  Build a tree out of the user's code 
  **	 Return: The starting node
  **/
-	public static ASTNode makeSyntaxTree(char[] sourceCode,String[] classpath, String[] sources, String unitName ) {
+	public ASTNode makeSyntaxTree(char[] sourceCode,String[] classpath, String[] sources, String unitName ) {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS9);
 		parser.setSource (sourceCode);

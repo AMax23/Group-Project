@@ -1,27 +1,19 @@
-import org.eclipse.jdt.core.dom.AST;
+package project1;
+
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.PrimitiveType;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Scanner;
-import java.io.File;
 
 public class TypeCounter {
 
-	private static int decCount;
-	private static int refCount;
-	
+	private int decCount;
+	private int refCount;
 	
 /**	 
  **	 Parameters: The starting node of the syntax tree, the type that the user is looking to count
@@ -33,7 +25,6 @@ public class TypeCounter {
 			
 			// COUNT ANNOTATION DECLARATIONS
 			public boolean visit(AnnotationTypeDeclaration node) {			
-				System.out.println("<< Annotation Type ??>>");
 				String nodeAsString = node.toString();
 				if ( nodeAsString.contains("interface "+ targetType) )	
 					decCount++;																		
@@ -43,12 +34,11 @@ public class TypeCounter {
 			// COUNT ENUMERATION DECLARATIONS
 			public boolean visit(EnumDeclaration node) {												
 				String nodeAsString = node.toString();
-				System.out.println("<< check enum?? >>");
 				if (nodeAsString.contains("enum "+ targetType)) 						
 					decCount++;																	
 				return true;
 			}
-
+		
 			// COUNT CLASS AND INTERFACE DECLARATIONS
 			public boolean visit(TypeDeclaration node) {
 				if ( node.resolveBinding().getQualifiedName().equals(targetType) )
