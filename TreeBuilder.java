@@ -18,10 +18,12 @@ public class TreeBuilder {
  **	 Return: The string of code from the directory.
  **/
 	public String filesToString(String pathname) throws IOException, FileNotFoundException {
+		
 		StringBuilder sb = new StringBuilder();	
 		File directory = new File(pathname);
 		File[] allFiles = directory.listFiles();
-
+		
+		
 		for (File f : allFiles) {						
 			String fileName = f.getName().toLowerCase();
 
@@ -53,7 +55,7 @@ public class TreeBuilder {
 	public ASTNode makeSyntaxTree(char[] sourceCode,String[] classpath, String[] sources, String unitName ) {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS9);
-		parser.setSource (sourceCode);
+		parser.setSource(sourceCode);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
@@ -64,5 +66,4 @@ public class TreeBuilder {
 
 		return cu;
 	}
-	
 }

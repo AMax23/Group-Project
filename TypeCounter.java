@@ -21,7 +21,7 @@ public class TypeCounter {
  **	 Return: The integer decCount.
  **/
 	public int countDec(ASTNode cu, String targetType) {
-		cu.accept(new ASTVisitor() {	
+		cu.accept(new ASTVisitor() {	 
 			
 			// COUNT ANNOTATION DECLARATIONS
 			public boolean visit(AnnotationTypeDeclaration node) {			
@@ -60,9 +60,12 @@ public class TypeCounter {
 			
 			// COUNT NORMAL ANNOTATION TYPE REFERENCES 
 			public boolean visit (NormalAnnotation node) {
+				try {
 				if ( node.resolveTypeBinding().getQualifiedName().equals(targetType) )
 					refCount++;
-				return true;
+				}catch (Exception e) {
+				}
+				return false;
 			}
 			
 			// COUNT MARKER ANNOTATION TYPE REFERENCES 
